@@ -1,6 +1,9 @@
 app = "devmatch-backend"
 primary_region = "gru"
 
+# IMPORTANTE: Este app usa Dockerfile, não buildpacks
+# Se encontrar erro "launch manifest was created for a app, but this is a app",
+# use 'fly deploy' em vez de 'fly launch', ou passe --dockerfile Dockerfile
 [build]
   dockerfile = "Dockerfile"
 
