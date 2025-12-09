@@ -1,0 +1,31 @@
+cff-version: 1.0.1
+message: O DevMatch é a plataforma que conecta desenvolvedores a empresas e projetos que precisam de talento em tecnologia, de forma ágil e eficiente.
+title: DevMatch
+authors:
+  - family-names: Martins Candido
+    given-names: Arthur  
+  - family-names: Costa Lisboa
+    given-names: Felipe 
+  - family-names: de Paula Fonseca
+    given-names: Gabriel  
+  - family-names: Soares Gomes da Silva
+    given-names: Lucas Alexandre 
+  - family-names: Carvalho Pereira
+    given-names: Pedro Henrique   
+  - name-suffix: Professora
+    affiliation: PUC Minas
+    family-names: Gomes Amaral
+    given-names: Cleia Marcia 
+  - name-suffix: Professora
+    affiliation: PUC Minas
+    family-names: Ribeiro de Souza
+    given-names: Joana Gabriela 
+keywords:
+  - recrutamento
+  - plataforma
+  - tecnologia
+  - desenvovedor
+repository-code: https://github.com/ICEI-PUC-Minas-PPLES-TI/plf-es-2025-2-ti2-1381100-devmatch.git
+license: CC-BY-4.0
+version: 1.0.0
+date-released: 09-12-2025
