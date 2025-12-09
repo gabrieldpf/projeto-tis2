@@ -2,7 +2,7 @@ app = "devmatch-backend"
 primary_region = "gru"
 
 [build]
-  builder = "paketobuildpacks/builder:base"
+  dockerfile = "Dockerfile"
 
 [env]
   PORT = "8080"
