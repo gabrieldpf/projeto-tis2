@@ -1,0 +1,13 @@
+target/
+.mvn/
+.git/
+.gitignore
+*.md
+.DS_Store
+.idea/
+*.iml
+.vscode/
+*.log
+fly.toml.example
+render.yaml
+
