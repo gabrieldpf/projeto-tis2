@@ -31,8 +31,13 @@ const DevPendingMilestonesPanel: React.FC<DevPendingMilestonesPanelProps> = ({ c
     const loadPerfil = async () => {
       if (!user?.id) return;
       try {
-        const perfil = await perfilDevService.buscarPerfil(parseInt(user.id));
-        setPerfilDevId(perfil.id || null);
+        const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : Number(user.id);
+        if (isNaN(userId)) {
+          console.error('ID do usuário inválido:', user.id);
+          return;
+        }
+        const perfil = await perfilDevService.buscarPerfil(userId);
+        setPerfilDevId(perfil?.id || null);
       } catch (err) {
         console.error('Erro ao buscar perfil do desenvolvedor', err);
       }
@@ -109,7 +114,7 @@ const DevPendingMilestonesPanel: React.FC<DevPendingMilestonesPanelProps> = ({ c
         perfilDevId,
         descricaoEntrega,
         arquivosEntrega,
-        horasTrabalhadas: horasTrabalhadas ? parseFloat(horasTrabalhadas) : undefined
+        horasTrabalhadas: horasTrabalhadas && horasTrabalhadas.trim() ? (isNaN(parseFloat(horasTrabalhadas)) ? undefined : parseFloat(horasTrabalhadas)) : undefined
       });
       setDeliveries(prev => [...prev, delivery]);
       setSubmitDialogOpen(false);
@@ -140,6 +145,11 @@ const DevPendingMilestonesPanel: React.FC<DevPendingMilestonesPanelProps> = ({ c
     } catch {
       return dateStr;
     }
+  };
+
+  const formatCurrency = (value?: number) => {
+    if (value == null || isNaN(value)) return '—';
+    return `R$ ${Number(value).toFixed(2)}`;
   };
 
   const handleAccept = async (id: number) => {
@@ -177,20 +187,22 @@ const DevPendingMilestonesPanel: React.FC<DevPendingMilestonesPanelProps> = ({ c
                   return (
                     <ListItem key={m.id} divider>
                       <ListItemText 
-                        primary={m.titulo} 
+                        primary={m.titulo || 'Sem título'} 
                         secondary={
                           <Box>
-                            <Typography variant="body2" color="text.secondary">
-                              {m.descricao}
-                            </Typography>
+                            {m.descricao && (
+                              <Typography variant="body2" color="text.secondary">
+                                {m.descricao}
+                              </Typography>
+                            )}
                             {m.dueDate && (
                               <Typography variant="body2" color="text.secondary">
                                 Prazo: {formatDate(m.dueDate)}
                               </Typography>
                             )}
-                            {m.valorMilestone && (
+                            {m.valorMilestone != null && (
                               <Typography variant="body2" color="text.secondary">
-                                Valor: R$ {m.valorMilestone.toFixed(2)}
+                                Valor: {formatCurrency(m.valorMilestone)}
                               </Typography>
                             )}
                             {deliveryStatus && (
@@ -234,7 +246,7 @@ const DevPendingMilestonesPanel: React.FC<DevPendingMilestonesPanelProps> = ({ c
             {selectedMilestone && (
               <Box>
                 <Typography variant="subtitle1" fontWeight="bold">
-                  {selectedMilestone.titulo}
+                  {selectedMilestone.titulo || 'Sem título'}
                 </Typography>
                 {selectedMilestone.descricao && (
                   <Typography variant="body2" color="text.secondary">

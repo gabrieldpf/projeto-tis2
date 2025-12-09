@@ -16,8 +16,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/perfis-dev")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000", "http://localhost:49393"}, 
-             allowCredentials = "true")
+@CrossOrigin(origins = {
+    "http://localhost:5173", 
+    "http://localhost:3000", 
+    "http://localhost:49393",
+    "https://devmatch-frontend.onrender.com"
+}, allowCredentials = "true")
 public class PerfilDevController {
     
     @Autowired

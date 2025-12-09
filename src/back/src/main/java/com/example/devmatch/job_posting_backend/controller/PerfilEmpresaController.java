@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/perfil-empresa")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://devmatch-frontend.onrender.com"
+})
 public class PerfilEmpresaController {
 
     @Autowired

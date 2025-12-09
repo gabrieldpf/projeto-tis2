@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: devmatch-backend
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/job-posting-backend-0.0.1-SNAPSHOT.jar --server.port=$PORT
+    envVars:
+      - key: PORT
+        value: 8080
+

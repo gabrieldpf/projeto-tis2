@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://localhost:3000",     // React padrão
                     "http://localhost:5173",     // Vite padrão
-                    "http://localhost:49393"     // Porta atual do Vite
+                    "http://localhost:49393",     // Porta atual do Vite
+                    "https://devmatch-frontend.onrender.com"  // Frontend em produção (Render)
                 )
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

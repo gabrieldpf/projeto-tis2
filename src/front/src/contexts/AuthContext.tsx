@@ -57,13 +57,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Chama a API real de login
       const response = await authService.login(email, password, type);
       
+      // Valida se a resposta tem os dados necessários
+      if (!response || !response.id) {
+        throw new Error('Resposta inválida do servidor. Tente novamente.');
+      }
+      
       // Converte a resposta do backend para o formato do frontend
       const userData: User = {
-        id: response.id.toString(),
-        email: response.email,
-        name: response.nome,
+        id: String(response.id),
+        email: response.email || '',
+        name: response.nome || '',
         type: response.tipo === 'dev' ? 'developer' : (response.tipo === 'empresa' ? 'company' : 'admin'),
-        profileComplete: response.perfilCompleto,
+        profileComplete: response.perfilCompleto || false,
       };
       
       setUser(userData);
@@ -85,13 +90,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Chama a API real de registro
       const response = await authService.register(email, password, name, type);
       
+      // Valida se a resposta tem os dados necessários
+      if (!response || !response.id) {
+        throw new Error('Resposta inválida do servidor. Tente novamente.');
+      }
+      
       // Converte a resposta do backend para o formato do frontend
       const userData: User = {
-        id: response.id.toString(),
-        email: response.email,
-        name: response.nome,
+        id: String(response.id),
+        email: response.email || '',
+        name: response.nome || '',
         type: response.tipo === 'dev' ? 'developer' : (response.tipo === 'empresa' ? 'company' : 'admin'),
-        profileComplete: response.perfilCompleto,
+        profileComplete: response.perfilCompleto || false,
       };
       
       setUser(userData);

@@ -22,8 +22,12 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "http://localhost:49393"}, 
-             allowCredentials = "true")
+@CrossOrigin(origins = {
+    "http://localhost:3000", 
+    "http://localhost:5173", 
+    "http://localhost:49393",
+    "https://devmatch-frontend.onrender.com"
+}, allowCredentials = "true")
 public class AuthController {
     
     @Autowired

@@ -1,6 +1,20 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+// Garante que a URL seja absoluta (com protocolo)
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) {
+    return 'http://localhost:8080/api';
+  }
+  // Se já começa com http:// ou https://, usa como está
+  if (envUrl.startsWith('http://') || envUrl.startsWith('https://')) {
+    return envUrl;
+  }
+  // Se não tem protocolo, adiciona https://
+  return `https://${envUrl}`;
+};
+
+const baseURL = getBaseURL();
 
 export const httpClient = axios.create({
   baseURL,

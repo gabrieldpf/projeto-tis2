@@ -8,7 +8,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 const CompanyMilestonesPanel: React.FC = () => {
   const { user } = useAuth();
   const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const [jobId, setJobId] = useState<number | null>(null);
+  const [contractId, setContractId] = useState<number | null>(null);
+  const [projetoId, setProjetoId] = useState<number | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
 
   useEffect(() => {
@@ -16,12 +17,33 @@ const CompanyMilestonesPanel: React.FC = () => {
       try {
         if (!user?.id) return;
 
-        const paramId = new URLSearchParams(window.location.search).get('jobId');
-        const resolvedId = paramId ? Number(paramId) : null;
-        const finalJobId = resolvedId !== null && Number.isFinite(resolvedId) ? resolvedId : 1; // fallback temporário
-        setJobId(finalJobId);
-
-        const data = await milestoneService.getMilestonesByJob(finalJobId);
+        const params = new URLSearchParams(window.location.search);
+        const contractParam = params.get('contractId');
+        const projetoParam = params.get('projetoId');
+        
+        if (contractParam) {
+          const id = Number(contractParam);
+          if (Number.isFinite(id) && id > 0) {
+            setContractId(id);
+            const data = await milestoneService.getMilestonesByContract(id);
+            setMilestones(Array.isArray(data) ? data : []);
+            return;
+          }
+        }
+        
+        if (projetoParam) {
+          const id = Number(projetoParam);
+          if (Number.isFinite(id) && id > 0) {
+            setProjetoId(id);
+            const data = await milestoneService.getMilestonesByProject(id);
+            setMilestones(Array.isArray(data) ? data : []);
+            return;
+          }
+        }
+        
+        // Fallback: tentar carregar do projeto 1 se não houver parâmetros
+        setProjetoId(1);
+        const data = await milestoneService.getMilestonesByProject(1);
         setMilestones(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Erro ao buscar milestones:', err);
@@ -34,6 +56,20 @@ const CompanyMilestonesPanel: React.FC = () => {
   const handleCreated = (m?: Milestone) => {
     setOpenCreate(false);
     if (m) setMilestones(prev => [m, ...prev]);
+  };
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '—';
+    try {
+      return new Date(dateStr).toLocaleString('pt-BR');
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const formatCurrency = (value?: number) => {
+    if (value == null || isNaN(value)) return '—';
+    return `R$ ${Number(value).toFixed(2)}`;
   };
 
   return (
@@ -54,14 +90,29 @@ const CompanyMilestonesPanel: React.FC = () => {
               milestones.map((m) => (
                 <ListItem key={m.id} divider sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                   <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
-                    <ListItemText primary={m.titulo} secondary={m.descricao} />
-                    {m.status && <Chip size="small" label={m.status} />}
+                    <ListItemText 
+                      primary={m.titulo || 'Sem título'} 
+                      secondary={
+                        <Box>
+                          {m.descricao && (
+                            <Typography variant="body2" color="text.secondary">
+                              {m.descricao}
+                            </Typography>
+                          )}
+                          {m.dueDate && (
+                            <Typography variant="body2" color="text.secondary">
+                              Prazo: {formatDate(m.dueDate)}
+                            </Typography>
+                          )}
+                          {m.valorMilestone != null && (
+                            <Typography variant="body2" color="text.secondary">
+                              Valor: {formatCurrency(m.valorMilestone)}
+                            </Typography>
+                          )}
+                        </Box>
+                      } 
+                    />
                   </Stack>
-                  {m.dueDate && (
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
-                      Prazo: {m.dueDate}
-                    </Typography>
-                  )}
                 </ListItem>
               ))
             )}
@@ -73,7 +124,8 @@ const CompanyMilestonesPanel: React.FC = () => {
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         onCreated={handleCreated}
-        jobId={jobId ?? 1}
+        contractId={contractId ?? undefined}
+        projetoId={projetoId ?? undefined}
       />
     </Box>
   );

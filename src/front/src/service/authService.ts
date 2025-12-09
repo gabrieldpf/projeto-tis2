@@ -1,6 +1,20 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8080/api'}/auth`;
+// Garante que a URL seja absoluta (com protocolo)
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) {
+    return 'http://localhost:8080/api';
+  }
+  // Se já começa com http:// ou https://, usa como está
+  if (envUrl.startsWith('http://') || envUrl.startsWith('https://')) {
+    return envUrl;
+  }
+  // Se não tem protocolo, adiciona https://
+  return `https://${envUrl}`;
+};
+
+const API_URL = `${getBaseURL()}/auth`;
 
 // Tipos para as requisições e respostas
 export interface LoginRequest {
